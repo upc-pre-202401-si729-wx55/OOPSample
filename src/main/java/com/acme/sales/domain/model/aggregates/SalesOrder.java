@@ -54,4 +54,10 @@ public class SalesOrder {
     public void clearItems() {
         this.items.clear();
     }
+
+    public double calculateTotalPrice() {
+        return items.stream()
+                .mapToDouble(SalesOrderItem::calculateItemPrice)
+                .sum();
+    }
 }
