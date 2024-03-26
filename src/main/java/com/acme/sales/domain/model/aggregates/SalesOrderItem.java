@@ -32,7 +32,7 @@ public class SalesOrderItem {
         return itemId;
     }
 
-    public double calculatePrice() {
+    public double calculateItemPrice() {
         return quantity * unitPrice;
     }
 
