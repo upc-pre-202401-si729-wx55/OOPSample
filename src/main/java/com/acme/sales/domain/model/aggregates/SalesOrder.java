@@ -12,7 +12,7 @@ public class SalesOrder {
 
     private SalesOrderStatus status;
 
-    private List<SalesOrderItem> items;
+    private final List<SalesOrderItem> items;
 
     public SalesOrder(Address shippingAddress) {
         this.internalId = UUID.randomUUID();
@@ -71,5 +71,9 @@ public class SalesOrder {
         return items.stream()
                 .mapToDouble(SalesOrderItem::calculateItemPrice)
                 .sum();
+    }
+
+    public String getShippingAddress() {
+        return shippingAddress.getAddressAsString();
     }
 }
