@@ -33,12 +33,9 @@ public class SalesOrder {
     }
 
     public void dispatch(String street, String city, String state, String zipCode, String country) {
-        if (status == SalesOrderStatus.APPROVED) {
-            this.shippingAddress = new Address(street, city, state, zipCode, country);
-            status = SalesOrderStatus.IN_PROGRESS;
-        } else {
-            throw new IllegalStateException("Only orders in APPROVED status can be dispatched");
-        }
+        verifyIfReadyForDispatch();
+        this.shippingAddress = new Address(street, city, state, zipCode, country);
+        status = SalesOrderStatus.IN_PROGRESS;
     }
 
     public boolean isInProgress() {
@@ -78,5 +75,25 @@ public class SalesOrder {
 
     public String getShippingAddress() {
         return shippingAddress.getAddressAsString();
+    }
+
+    public void addPayment(double amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("Payment amount must be greater than 0");
+        }
+
+        if (amount > this.calculateTotalPrice() - this.paymentAmount) {
+            throw new IllegalArgumentException("Payment amount exceeds the total price of the order");
+        }
+        this.paymentAmount += amount;
+    }
+
+    private void verifyIfReadyForDispatch() {
+        if (status == SalesOrderStatus.APPROVED) return;
+        if (paymentAmount == calculateTotalPrice()) {
+            status = SalesOrderStatus.APPROVED;
+        } else {
+            throw new IllegalStateException("Order is not ready for dispatch");
+        }
     }
 }
