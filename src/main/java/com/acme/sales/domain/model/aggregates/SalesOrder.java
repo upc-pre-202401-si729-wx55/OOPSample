@@ -48,6 +48,18 @@ public class SalesOrder {
 
 
     public void addItem(int quantity, Long productId, double unitPrice) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be greater than 0");
+        }
+        if (unitPrice <= 0) {
+            throw new IllegalArgumentException("Unit price must be greater than 0");
+        }
+        if (productId == null) {
+            throw new IllegalArgumentException("Product ID must be provided");
+        }
+        if (this.status == SalesOrderStatus.APPROVED) {
+            throw new IllegalStateException("Items cannot be added to an order in APPROVED status");
+        }
         items.add(new SalesOrderItem(quantity, productId, unitPrice));
     }
 
