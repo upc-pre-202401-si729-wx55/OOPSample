@@ -8,17 +8,19 @@ import java.util.UUID;
 public class SalesOrder {
     private final UUID internalId;
 
-    private final Address shippingAddress;
+    private Address shippingAddress;
 
     private SalesOrderStatus status;
 
     private final List<SalesOrderItem> items;
 
-    public SalesOrder(Address shippingAddress) {
+    private double paymentAmount;
+
+    public SalesOrder() {
         this.internalId = UUID.randomUUID();
-        this.shippingAddress = shippingAddress;
         this.status = SalesOrderStatus.CREATED;
         this.items = List.of();
+        this.paymentAmount = 0;
     }
 
     public void cancel() {
@@ -30,8 +32,9 @@ public class SalesOrder {
         }
     }
 
-    public void dispatch() {
+    public void dispatch(String street, String city, String state, String zipCode, String country) {
         if (status == SalesOrderStatus.APPROVED) {
+            this.shippingAddress = new Address(street, city, state, zipCode, country);
             status = SalesOrderStatus.IN_PROGRESS;
         } else {
             throw new IllegalStateException("Only orders in APPROVED status can be dispatched");
