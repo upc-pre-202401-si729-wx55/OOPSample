@@ -36,6 +36,17 @@ public class SalesOrder {
         verifyIfReadyForDispatch();
         this.shippingAddress = new Address(street, city, state, zipCode, country);
         status = SalesOrderStatus.IN_PROGRESS;
+        items.forEach(SalesOrderItem::dispatch);
+    }
+
+    public boolean isDispatched() {
+        return this.items.stream().allMatch(SalesOrderItem::isDispatched);
+    }
+
+    public void verifyIfDispatchIsCompleted() {
+        if (status == SalesOrderStatus.IN_PROGRESS && isDispatched()) {
+            status = SalesOrderStatus.DELIVERED;
+        }
     }
 
     public boolean isInProgress() {
